@@ -16,14 +16,14 @@ import {
 
 interface VerificationEmailProps {
   username: string;
-  otp: string;
+  verifyCode: string;
 }
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://yourapp.com';
 
 export default function VerificationEmail({
   username = '',
-  otp = '',
+  verifyCode = '',
 }: VerificationEmailProps) {
   return (
     <Html lang="en" dir="ltr">
@@ -51,7 +51,7 @@ export default function VerificationEmail({
       </Head>
 
       {/* Preview text shown in email client inbox */}
-      <Preview>Your verification code is {otp} — valid for 10 minutes.</Preview>
+      <Preview>Your verification code is {verifyCode} — valid for 10 minutes.</Preview>
 
       <Body style={bodyStyle}>
         <Container style={containerStyle}>
@@ -90,7 +90,7 @@ export default function VerificationEmail({
             <Row>
               <Section style={otpWrapperStyle}>
                 <Text style={otpLabelStyle}>YOUR VERIFICATION CODE</Text>
-                <Text style={otpStyle}>{otp}</Text>
+                <Text style={otpStyle}>{verifyCode}</Text>
               </Section>
             </Row>
 
@@ -98,7 +98,7 @@ export default function VerificationEmail({
             <Row>
               <Section style={{ textAlign: 'center', marginTop: '8px' }}>
                 <Button
-                  href={`${baseUrl}/verify?otp=${otp}`}
+                  href={`${baseUrl}/verify?otp=${verifyCode}`}
                   style={buttonStyle}
                 >
                   Verify My Email

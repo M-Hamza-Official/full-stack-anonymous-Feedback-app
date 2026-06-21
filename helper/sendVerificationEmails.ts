@@ -3,7 +3,7 @@ import { apiResponse } from "@/types/apiResponse";
 import VerificationEmail from "../emails/verifyEmail"
 import { email } from "zod";
 
-export async function sendVerificationCode(
+export async function sendVerificationEmail(
     email: string,
     username: string,
     verifycode: string
@@ -13,7 +13,7 @@ export async function sendVerificationCode(
       from: 'Acme <onboarding@resend.dev>',
       to: email,
       subject: 'Hello world',
-      react: VerificationEmail({username,otp:verifycode}),
+      react: VerificationEmail({username,verifyCode:verifycode}),
     });
         return { success: true, message: "Verification email send successfully! " }
 
