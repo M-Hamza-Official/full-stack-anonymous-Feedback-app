@@ -9,7 +9,7 @@ async function POST(request: Request) {
         const { username, email, password } = await request.json();
         const verifyCode = Math.floor(10000 + Math.random() * 900000).toString()
         const verifiedUserByUsername = await userModel.findOne({
-            username,
+           userName: username,
             isVerified: true
         })
         //checking if user is trying to get already taken username 
