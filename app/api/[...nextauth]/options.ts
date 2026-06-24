@@ -23,13 +23,13 @@ export const authOptions: NextAuthOptions = {
 
                         ]
                     })
-                    if(!user){
+                    if (!user) {
                         throw new Error("Invalid credentials!")
                     }
-                    const isPasswordMatched= await bcrypt.compare(credentials.password,user.password)
-                    if(isPasswordMatched){
+                    const isPasswordMatched = await bcrypt.compare(credentials.password, user.password)
+                    if (isPasswordMatched) {
                         return user
-                    }else{
+                    } else {
                         throw new Error("Invalid credentials!")
 
                     }
@@ -39,26 +39,34 @@ export const authOptions: NextAuthOptions = {
             }
 
         })
-        
+
     ],
-    callbacks:{
+    callbacks: {
         async jwt({ token, user }) {
-            if(user){
-                token._id=user._id?.toString()
-                token._isVerified=user.isVerified
+            if (user) {
+                token._id = user._id?.toString()
+                token._isVerified = user.isVerified
+                token.isAcceptingMessages = user.isAcceptingMessages
+                token.username = user.username
             }
-          return token
+            return token
         },
-         async session({ session, token }) {
-      return session
+        async session({ session, token }) {
+            if (token) {
+                session.user._id = token._id
+                session.user.isAcceptingMessages = token.isAcceptingMessages
+                session.user.isVerified = token.isVerified
+                session.user.username = token.username
+            }
+            return session
+        },
     },
+    pages: {
+        signIn: '/sign-in'
     },
-    pages:{
-        signIn:'/sign-in'
+    session: {
+        strategy: "jwt"
     },
-    session:{
-        strategy:"jwt"
-    },
-    secret:process.env.NEXTAUTH_SECRET
-        
-    }
+    secret: process.env.NEXTAUTH_SECRET
+
+}
