@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import userModel from "@/models/user";
 import dbconnect from "@/lib/dbConnect";
-import { email } from "zod";
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -45,7 +44,7 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user }) {
             if (user) {
                 token._id = user._id?.toString()
-                token._isVerified = user.isVerified
+                token.isVerified = user.isVerified
                 token.isAcceptingMessages = user.isAcceptingMessages
                 token.username = user.username
             }

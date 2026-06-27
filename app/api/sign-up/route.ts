@@ -4,8 +4,9 @@ import { sendVerificationEmail } from "@/helper/sendVerificationEmails";
 import { success } from "zod";
 import userModel from "@/models/user";
 
-async function POST(request: Request) {
+export async function POST(request: Request) {
     try {
+        // await dbconnect()
         const { username, email, password } = await request.json();
         const verifyCode = Math.floor(10000 + Math.random() * 900000).toString()
         const verifiedUserByUsername = await userModel.findOne({
@@ -52,7 +53,7 @@ async function POST(request: Request) {
                 verifyCode,
                 isVerified: false,
                 checkCodeExpiry,
-                isAccepting: true,
+                isAcceptingMessages: true,
                 messages: []
             })
             await newUser.save()
