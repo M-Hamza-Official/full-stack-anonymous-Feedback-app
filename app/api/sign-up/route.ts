@@ -6,7 +6,7 @@ import userModel from "@/models/user";
 
 export async function POST(request: Request) {
     try {
-        // await dbconnect()
+        await dbconnect()
         const { username, email, password } = await request.json();
         const verifyCode = Math.floor(10000 + Math.random() * 900000).toString()
         const verifiedUserByUsername = await userModel.findOne({
@@ -60,8 +60,8 @@ export async function POST(request: Request) {
         }
         //send verification email
         const emailResponse = await sendVerificationEmail(
-            username,
             email,
+            username,
             verifyCode
         )
         if(!emailResponse.success){

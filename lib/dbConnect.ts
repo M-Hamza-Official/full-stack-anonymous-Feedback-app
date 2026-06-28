@@ -13,6 +13,11 @@ async function dbconnect():Promise<void>{
     return;
     }
     try {
+        if (!process.env.MONGODB_URI) {
+    throw new Error("MONGODB_URI is missing");
+}
+
+await mongoose.connect(process.env.MONGODB_URI);
      const db=   await mongoose.connect(process.env.MONGODB_URI || "")
      Connection.isConnected = db.connections[0].readyState
      console.log("db connected successfully");
