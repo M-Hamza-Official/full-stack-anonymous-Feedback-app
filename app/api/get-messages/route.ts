@@ -5,20 +5,44 @@ import { authOptions } from "../auth/[...nextauth]/options";
 import mongoose from "mongoose";
 
 export async function GET(request: Request) {
-  await dbconnect();
+    await dbconnect();
 
-  const session = await getServerSession(authOptions);
-  const user: User = session?.user as User;
+    const session = await getServerSession(authOptions);
+    const user: User = session?.user as User;
 
-  if (!session || !session.user) {
-    return Response.json(
-      { success: false, message: "Not authenticated" },
-      { status: 401 }
-    );
-  }
+    if (!session || !session.user) {
+        return Response.json(
+            { success: false, message: "Not authenticated" },
+            { status: 401 }
+        );
+    }
 
-  const userId = new mongoose.Types.ObjectId(user._id)
+    const userId = new mongoose.Types.ObjectId(user._id)
 
+    try {
+        const userAggregate = await userModel.aggregate([
+            { $match: { _id: userId } },
+            { $unwind: '$messages' },
+            { $sort: { '$messages.createdAt': -1 } },
+            { $group: { _id: '$_id', messages: { $push: '$messages' } } }
+        ])
+        if (!userAggregate || userAggregate.length === 0) {
+            return Response.json(
+                { success: false, message: "User not found" },
+                { status: 401 }
+            );
+        }
+        return Response.json(
+            { success: false, messages: userAggregate[0].messages },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.log(error);
 
+        return Response.json(
+            { success: false, message: "Error getting messages!" },
+            { status: 401 }
+        );
+    }
 
 }
