@@ -19,7 +19,7 @@ export async function GET(request: Request) {
                 status: 500
             })
         }
-        const isCodeValid = user.isVerified === code
+        const isCodeValid = user.verifyCode === code
         const isverifyCodeNotExpired = new Date(user.checkCodeExpiry) > new Date()
         if (isCodeValid && isverifyCodeNotExpired) {
             user.isVerified = true

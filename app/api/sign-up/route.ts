@@ -53,7 +53,7 @@ export async function POST(request: Request) {
                 verifyCode,
                 isVerified: false,
                 checkCodeExpiry,
-                isAcceptingMessages: true,
+                isAccepting: true,
                 messages: []
             })
             await newUser.save()
