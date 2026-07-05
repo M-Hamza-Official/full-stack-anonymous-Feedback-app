@@ -10,7 +10,7 @@ export async function POST(request: Request) {
         const { username, email, password } = await request.json();
         const verifyCode = Math.floor(10000 + Math.random() * 900000).toString()
         const verifiedUserByUsername = await userModel.findOne({
-           userName: username,
+            userName: username,
             isVerified: true
         })
         //checking if user is trying to get already taken username 
@@ -26,20 +26,20 @@ export async function POST(request: Request) {
         const verifiedUserByEmail = await userModel.findOne({ email })
         if (verifiedUserByEmail) {
 
-        if(verifiedUserByEmail.isVerified){
-           return Response.json({
-                success:false,
-                message:"User with same email already exist!"
-           },{
-            status:400
-           })
-        }else{
-             const hashedPassword = await bcrypt.hash(password, 10);
-             verifiedUserByEmail.password=hashedPassword
-            verifiedUserByEmail.verifyCode = verifyCode
-            verifiedUserByEmail.checkCodeExpiry = new Date(Date.now()+360000)
-           await verifiedUserByEmail.save()
-        }
+            if (verifiedUserByEmail.isVerified) {
+                return Response.json({
+                    success: false,
+                    message: "User with same email already exist!"
+                }, {
+                    status: 400
+                })
+            } else {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                verifiedUserByEmail.password = hashedPassword
+                verifiedUserByEmail.verifyCode = verifyCode
+                verifiedUserByEmail.checkCodeExpiry = new Date(Date.now() + 360000)
+                await verifiedUserByEmail.save()
+            }
 
 
         } else {
@@ -64,20 +64,20 @@ export async function POST(request: Request) {
             username,
             verifyCode
         )
-        if(!emailResponse.success){
+        if (!emailResponse.success) {
             return Response.json({
-                  success:false,
-                message:emailResponse.message
-            },{
-                status:500
+                success: false,
+                message: emailResponse.message
+            }, {
+                status: 500
             })
         }
-return  Response.json({
-                  success:true,
-                message:"User registered successfully. verify your email"
-            },{
-                status:201
-            })
+        return Response.json({
+            success: true,
+            message: "User registered successfully. verify your email"
+        }, {
+            status: 201
+        })
 
     } catch (error) {
         console.log("Error registering user", error);

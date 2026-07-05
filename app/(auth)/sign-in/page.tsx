@@ -1,20 +1,19 @@
 'use client'
-import { useSession, signIn, signOut } from "next-auth/react"
-
-export default function SignIn() {
-  const { data: session } = useSession()
-  if (session) {
-    return (
-      <>
-        Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    )
-  }
+import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller,useForm } from "react-hook-form"
+import { useState } from "react"
+import { toast } from "sonner"
+const page = () => {
+    const [username, setusername] = useState('')
+    const [userNameMessage, setUserNameMessage] = useState('')
+    const [isCheckingUsername, setIsCheckingUsername] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+   
     </>
   )
 }
+
+export default page
