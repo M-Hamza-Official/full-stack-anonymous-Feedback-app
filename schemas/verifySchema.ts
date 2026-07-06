@@ -1,4 +1,4 @@
 import { z } from "zod";
-export const verifySchema = ({
+export const verifySchema = z.object({
     code: z.string().length(6,{message:"code should be in 6 character"})
 })
