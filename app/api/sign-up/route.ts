@@ -7,10 +7,10 @@ import userModel from "@/models/user";
 export async function POST(request: Request) {
     try {
         await dbconnect()
-        const { username, email, password } = await request.json();
+        const { userName, email, password } = await request.json();
         const verifyCode = Math.floor(10000 + Math.random() * 900000).toString()
         const verifiedUserByUsername = await userModel.findOne({
-            userName: username,
+            userName,
             isVerified: true
         })
         //checking if user is trying to get already taken username 
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
             const checkCodeExpiry = new Date();
             checkCodeExpiry.setHours(checkCodeExpiry.getHours() + 1)
             const newUser = new userModel({
-                userName: username,
+                userName,
                 email,
                 password: hashedPassword,
                 verifyCode,
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
         //send verification email
         const emailResponse = await sendVerificationEmail(
             email,
-            username,
+            userName,
             verifyCode
         )
         if (!emailResponse.success) {
