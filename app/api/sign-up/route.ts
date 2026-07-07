@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     try {
         await dbconnect()
         const { userName, email, password } = await request.json();
-        const verifyCode = Math.floor(10000 + Math.random() * 900000).toString()
+        const verifyCode = Math.floor(100000 + Math.random() * 900000).toString()
         const verifiedUserByUsername = await userModel.findOne({
             userName,
             isVerified: true
@@ -35,6 +35,8 @@ export async function POST(request: Request) {
                 })
             } else {
                 const hashedPassword = await bcrypt.hash(password, 10);
+                    verifiedUserByEmail.userName = userName          // <-- this line fix the verify code bug
+
                 verifiedUserByEmail.password = hashedPassword
                 verifiedUserByEmail.verifyCode = verifyCode
                 verifiedUserByEmail.checkCodeExpiry = new Date(Date.now() + 360000)

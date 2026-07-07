@@ -8,9 +8,13 @@ export async function POST(request: Request) {
     try {
         const { code, username } = await request.json()
         const decodedUser = decodeURIComponent(username)
+        console.log("Searching for userName:", JSON.stringify(decodedUser))
+
         const user = await userModel.findOne({
-            username: decodedUser
+            userName:decodedUser
         })
+        const allUsers = await userModel.find({}, "userName email")
+console.log("All users in DB:", JSON.stringify(allUsers))
         if (!user) {
             return Response.json({
                 success: false,
@@ -20,6 +24,10 @@ export async function POST(request: Request) {
             })
         }
         const isCodeValid = user.verifyCode === code
+      console.log("Code from frontend:", code);
+console.log("Code from database:", user.verifyCode);
+console.log("Type of frontend code:", typeof code);
+console.log("Type of database code:", typeof user.verifyCode);
         const isverifyCodeNotExpired = new Date(user.checkCodeExpiry) > new Date()
         if (isCodeValid && isverifyCodeNotExpired) {
             user.isVerified = true
