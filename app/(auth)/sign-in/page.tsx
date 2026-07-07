@@ -10,10 +10,10 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { signUpValidation } from "@/schemas/signUpSchema"
 
-import { Field, FieldDescription, FieldError, FieldLabel } from "@/app/components/ui/field"
-import { Input } from "@/app/components/ui/input"
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 import { Loader2 } from "lucide-react"
-import { Button } from "@/app/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { signIn } from "next-auth/react"
 import { signInSchema } from "@/schemas/signInSchema"
 
