@@ -63,7 +63,7 @@ const page = () => {
       })
       //redirect the user to new url
       router.replace(`/verify/${username}`)
-      setIsSubmitting(false)
+      // setIsSubmitting(false)
     } catch (error) {
       console.log("Error signning up user", error);
       const Error = error as AxiosError<apiResponse>
@@ -72,6 +72,8 @@ const page = () => {
         description: SignUPError,
 
       })
+      
+    } finally{
       setIsSubmitting(false)
 
     }
@@ -185,6 +187,15 @@ const page = () => {
             'Sign Up'
           )}
         </Button>
+        <div className="text-center text-sm text-gray-500">
+  Already have an account?{" "}
+  <Link
+    href="/sign-in"
+    className="font-medium text-gray-900 hover:underline"
+  >
+    Sign in
+  </Link>
+</div>
       </form>
     </FormProvider>
   </div>
