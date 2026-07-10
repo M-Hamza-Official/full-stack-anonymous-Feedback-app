@@ -5,15 +5,16 @@ declare module 'next-auth'{
         _id?:string,
         isVerified?:boolean,
         isAcceptingMessages?:boolean,
-        username?:string
+        userName?:string
     }
     //why we put user object inside session?
     interface Session{
         user:{
+            id?:string,
           _id?:string,
         isVerified?:boolean,
         isAcceptingMessages?:boolean,
-        username?:string
+        userName?:string
         }& DefaultSession["user"]
     }
 }
@@ -22,5 +23,5 @@ interface JWT {
 _id?: string;
 isVerified?: boolean;
 isAcceptingMessages?: boolean;
-username?: string;
+userName?: string;
 }}

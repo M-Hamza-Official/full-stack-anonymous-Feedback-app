@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import userModel from "@/models/user";
 import dbconnect from "@/lib/dbConnect";
+import {User as MongooseUser } from "@/models/user"
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -46,7 +47,8 @@ export const authOptions: NextAuthOptions = {
                 token._id = user._id?.toString()
                 token.isVerified = user.isVerified
                 token.isAcceptingMessages = user.isAcceptingMessages
-                token.username = user.username
+                token.userName = user.userName
+                
             }
             return token
         },
@@ -55,7 +57,7 @@ export const authOptions: NextAuthOptions = {
                 session.user._id = token._id
                 session.user.isAcceptingMessages = token.isAcceptingMessages
                 session.user.isVerified = token.isVerified
-                session.user.username = token.username
+                session.user.userName = token.userName
             }
             return session
         },

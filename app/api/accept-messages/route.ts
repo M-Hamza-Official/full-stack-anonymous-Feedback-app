@@ -2,13 +2,15 @@ import userModel from "@/models/user";
 import dbconnect from "@/lib/dbConnect";
 import { getServerSession, User } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
+import { useSession } from "next-auth/react";
 
 export async function POST(request: Request) {
   await dbconnect();
 
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
-
+  
+  // const { data } = useSession()
   if (!session || !session.user) {
     return Response.json(
       { success: false, message: "Not authenticated" },
@@ -70,7 +72,7 @@ export async function GET(request: Request) {
   const userId = user._id;
 
   try {
-    const foundUser = await userModel.findById(userId) ;
+    const foundUser = await userModel.findById(userId);
 
     if (!foundUser) {
       return Response.json(

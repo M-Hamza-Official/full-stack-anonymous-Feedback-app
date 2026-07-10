@@ -10,27 +10,30 @@ import { toast } from 'sonner'
 const Navbar = () => {
   const { data: session } = useSession()
   const user: User = session?.user as User
+  console.log(user?.userName);
 
   return (
-    <div>
-      <nav>
-        <div>
-          {session?.user ? (<>{`Welcome ${user.username || user.email}`} <Button onClick={() => {
-            signOut()
-            toast("User signed out")
-          }
 
-          } >Log Out</Button></>) : 
-          (
-            <Link href={'/sign-in'} >
-              <Button>
-                Sign In
-              </Button>
-            </Link>
-          )}
-        </div>
-      </nav>
+  <nav className='flex items-center justify-between w-full px-6 py-4 border-b'>
+  <a href='#' className="text-xl font-bold text-black">Brave Feedback</a>
+  {session?.user ? (
+    <div className="flex items-center gap-6">
+      <p className="text-base text-gray-600">
+        Welcome, <span className="font-semibold text-xl text-black">{user?.userName ?? user.email}</span>
+      </p>
+      <Button className={`text-xl py-2`} onClick={() => {
+        signOut()
+        toast.info("User signed out")
+      }}>
+        Log Out
+      </Button>
     </div>
+  ) : (
+    <Link href={'/sign-in'}>
+      <Button>Sign In</Button>
+    </Link>
+  )}
+</nav>
   )
 }
 

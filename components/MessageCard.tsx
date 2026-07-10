@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { X } from "lucide-react"
 import { Message } from "@/models/user"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { apiResponse } from "@/types/apiResponse"
 import { toast } from "sonner"
 import { title } from "process"
@@ -34,18 +34,26 @@ type MessageCardProps={
 export default function MessageCard({message,onMessageDelete}:MessageCardProps) {
 // const toast = 
     const onSubmitHandler=async()=>{
-const response=await axios.delete<apiResponse>(`/api/delete-message${message._id}`)
-toast.info("message deleted")
+try {
+    const response=await axios.delete<apiResponse>(`/api/delete-message/${message._id}`)
+toast.success("message deleted")
+console.log(message._id);
+
 onMessageDelete(String(message._id))
+} catch (error) {
+    console.log("Error Accepting message", error)
+      const axiosError = error as AxiosError<apiResponse>
+      toast.error(axiosError.response?.data.message || "Failed to update status")
+}
     }
     return (
         <Card className="w-full max-w-sm">
             <CardHeader>
-                <CardTitle>Login to your account</CardTitle>
+                <CardTitle>{message.content}</CardTitle>
                 <CardDescription>
                     {/* Enter your email below to login to your account */}
                 </CardDescription>
-             //Alert Box--//   <AlertDialog>
+              <AlertDialog>
                     <AlertDialogTrigger render={<Button variant="outline" />}>
                         <X  className="w-5 h-5" />
                     </AlertDialogTrigger>

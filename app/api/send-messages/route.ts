@@ -2,11 +2,11 @@ import dbconnect from "@/lib/dbConnect";
 import userModel from "@/models/user";
 import { Message } from "@/models/user";
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
     await dbconnect()
     try {
         const { username, content } = await request.json()
-        const user = await userModel.findOne({ userName: username })
+        const user = await userModel.findOne({ userName:username })
         if (!user) {
             return Response.json(
                 { success: false, message: "User not found" },
