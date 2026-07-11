@@ -3,7 +3,7 @@
 import { Message } from '@/models/user'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { acceptMessageSchema } from "@/schemas/acceptMessageSchema"
 import axios, { AxiosError } from 'axios'
 import { apiResponse } from '@/types/apiResponse'
@@ -12,7 +12,8 @@ import { useSession } from 'next-auth/react'
 import { User } from 'next-auth'
 import MessageCard from '@/components/MessageCard'
 import { Switch } from '@/components/ui/switch'
-import { Separator } from '@/components/ui/separator'
+import { Button } from '@/components/ui/button'
+import { Copy, Loader2, RefreshCw, Inbox, Link2 } from 'lucide-react'
 
 const Page = () => {
   const { data: session } = useSession()
@@ -35,7 +36,7 @@ const Page = () => {
     }
   })
 
-  const { setValue, watch, register, control } = form
+  const { setValue, watch, register } = form
   const acceptMessage = watch("acceptMessages")
 
   const fetchAcceptedMessage = useCallback(async () => {
@@ -53,7 +54,6 @@ const Page = () => {
 
   const fetchMessages = useCallback(async (refresh: boolean = false) => {
     setIsLoading(true)
-    setIsSwitchLoading(false)
     try {
       const result = await axios.get<apiResponse>('/api/get-messages')
       setMessages(result.data.messages || [])
@@ -65,7 +65,6 @@ const Page = () => {
       toast.error("Error fetching messages")
     } finally {
       setIsLoading(false)
-      setIsSwitchLoading(false)
     }
   }, [])
 
@@ -101,49 +100,122 @@ const Page = () => {
     toast.success("Profile URL copied to clipboard!")
   }
 
-  // Authentication guards must return JSX structure directly
   if (!session || !session.user) {
-    return <div className="p-6 text-center">Please Sign In</div>
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-gray-500 text-xl">Please sign in to view your dashboard.</p>
+      </div>
+    )
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">User Dashboard</h1>
-
-      {/* Clipboard URL section */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Copy Your Unique Link</label>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={profileUrl}
-            disabled
-            className="border p-2 rounded w-full bg-gray-50"
-          />
-          <button onClick={copyToClipboard} className="bg-blue-600 text-white px-4 rounded hover:bg-blue-700">
-            Copy
-          </button>
+    <div className="min-h-screen bg-white">
+      <div className="p-4 sm:p-10 max-w-3xl mx-auto">
+        {/* Header */}
+        <div className="mb-10">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+            Dashboard
+          </h1>
+          <p className="text-gray-500 mt-2 text-lg">
+            Manage your anonymous messages and profile link
+          </p>
         </div>
-        <Switch className={`mt-3`}
-          {...register('acceptMessages')}
-          checked={acceptMessage}
-          onCheckedChange={toggleSwitch}
-          disabled={isSwitchLoading}
-        />
-              <Separator />
 
-        {/* Message list visualization fallback */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {messages.length === 0 ? (
-            <p className="text-gray-500">No messages to display.</p>
+        {/* Profile link + toggle card */}
+        <div className="mb-8 rounded-2xl border border-gray-100 bg-gray-50/60 p-7">
+          <div className="flex items-center gap-2 mb-4">
+            <Link2 className="h-5 w-5 text-indigo-500" />
+            <label className="text-base font-semibold text-gray-800">
+              Your Unique Link
+            </label>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              value={profileUrl}
+              disabled
+              className="border border-gray-200 rounded-lg px-4 py-3 w-full bg-white text-gray-700 text-base focus:outline-none"
+            />
+            <Button
+              onClick={copyToClipboard}
+              size="lg"
+              className="shrink-0 gap-2 rounded-lg text-base"
+            >
+              <Copy className="h-4 w-4" />
+              Copy
+            </Button>
+          </div>
+
+          <div className="h-px bg-gray-200 my-7" />
+
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-semibold text-gray-900 text-lg">Accept Messages</p>
+              <p className="text-base text-gray-500 mt-1">
+                {acceptMessage
+                  ? "You're currently accepting new messages"
+                  : "You're not accepting new messages"}
+              </p>
+            </div>
+            <Switch
+              {...register('acceptMessages')}
+              checked={acceptMessage}
+              onCheckedChange={toggleSwitch}
+              disabled={isSwitchLoading}
+            />
+          </div>
+        </div>
+
+        {/* Messages section */}
+        <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-7">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Messages{' '}
+              {messages.length > 0 && (
+                <span className="text-gray-400 font-normal text-lg">
+                  ({messages.length})
+                </span>
+              )}
+            </h2>
+            <Button
+              variant="ghost"
+              size="lg"
+              className="gap-2 text-gray-500 text-base"
+              disabled={isLoading}
+              onClick={(e) => {
+                e.preventDefault()
+                fetchMessages(true)
+              }}
+            >
+              {isLoading ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <RefreshCw className="h-5 w-5" />
+              )}
+              Refresh
+            </Button>
+          </div>
+
+          {isLoading ? (
+            <div className="flex items-center justify-center py-16 text-gray-400 text-lg">
+              <Loader2 className="h-7 w-7 animate-spin mr-3" />
+              Loading messages...
+            </div>
+          ) : messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+              <Inbox className="h-12 w-12 mb-4" />
+              <p className="text-lg">No messages yet. Share your link to get feedback!</p>
+            </div>
           ) : (
-            messages.map((message) => (
-              <MessageCard
-                key={String(message._id)}
-                onMessageDelete={handleDeleteMessage}
-                message={message}
-              />
-            ))
+            <div className="grid grid-cols-2">
+              {messages.map((message) => (
+                <MessageCard
+                  key={String(message._id)}
+                  onMessageDelete={handleDeleteMessage}
+                  message={message}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>

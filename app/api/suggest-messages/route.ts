@@ -3,7 +3,7 @@ import {
   createUIMessageStreamResponse,
   toUIMessageStream,
 } from 'ai';
-import { openai } from "@ai-sdk/openai";
+import { google } from '@ai-sdk/google';
 export async function POST(req: Request) {
   try {
   const prompt =
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   
   
     const result = streamText({
-      model: openai("gpt-5.5"),
+      model: google("gemini-2.5-flash"),
       prompt,
     });
   

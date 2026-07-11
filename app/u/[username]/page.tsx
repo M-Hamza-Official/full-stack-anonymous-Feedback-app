@@ -15,6 +15,7 @@ import { apiResponse } from '@/types/apiResponse'
 import z from 'zod'
 import { useParams, useSearchParams } from "next/navigation";
 import { toast } from 'sonner'
+import SuggestMessages from '../../../components/SuggestMessage'
 
 const page = () => {
     const params = useParams<{ username: string }>()
@@ -23,7 +24,7 @@ const username=params.username
     const form = useForm({
         resolver: zodResolver(messageSchema)
     })
-
+const {setValue}=form
     const onSubmit = async (data: z.infer<typeof messageSchema>) => {
         // await dbconnect()
         try {
@@ -32,9 +33,11 @@ const username=params.username
                 content:data.content
             })
             toast.success('Message sent successfully!')
+            form.reset()
              return Response.json({
                 status: true,
-                message: "Message sent successfully! "
+                message: "Message sent successfully! ",
+                
             }, {
                 status: 200
             })
@@ -95,6 +98,8 @@ console.log("Error sending message", error)
       </Button>
 
     </div>
+          <SuggestMessages onSelectQuestion={(q) => setValue('content', q)} />
+
   </div>
 </form>
     )
