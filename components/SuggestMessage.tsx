@@ -1,52 +1,54 @@
 'use client';
 import { useCompletion } from '@ai-sdk/react';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowUpRight } from 'lucide-react';
 
 export default function SuggestMessages({
   onSelectQuestion,
 }: {
   onSelectQuestion: (value: string) => void;
 }) {
+  const initialMessageString =
+    "What's your favorite movie?||Do you have any pets?||What's your dream job?";
+
   const { completion, complete, isLoading, error } = useCompletion({
     api: '/api/suggest-messages',
+    initialCompletion: initialMessageString
   });
 
   const questions = completion.split('||').filter((q) => q.trim().length > 0);
 
   return (
-    <div className="mt-8 space-y-4">
-      <Button
-        variant="outline"
+    <div className="space-y-4">
+      <button
+        type="button"
         onClick={() => complete('')}
         disabled={isLoading}
+        className="inline-flex items-center gap-2 rounded-full border border-[#D9A15B]/30 px-4 py-2 text-xs uppercase tracking-wider text-[#D9A15B] transition-colors hover:bg-[#D9A15B]/10 disabled:opacity-50"
       >
         {isLoading ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
             Generating...
           </>
         ) : (
-          'Suggest New Messages'
+          'Suggest new messages'
         )}
-      </Button>
+      </button>
 
-      <p className="text-sm text-muted-foreground">
+      <p className="text-xs text-[#8B92A6]">
         Click on any message below to select it.
       </p>
 
-      <div className="rounded-2xl border bg-background shadow-sm p-6 space-y-3">
-        <h3 className="text-xl font-semibold">Messages</h3>
-
+      <div>
         {error && (
-          <p className="text-sm text-red-500">
+          <p className="text-sm text-red-400">
             Failed to load suggestions. Try again.
           </p>
         )}
 
         {questions.length === 0 && !isLoading && !error && (
-          <p className="text-sm text-muted-foreground">
-            Click &quot;Suggest New Messages&quot; to get started.
+          <p className="text-sm text-[#8B92A6]">
+            Click &quot;Suggest new messages&quot; to get started.
           </p>
         )}
 
@@ -55,9 +57,13 @@ export default function SuggestMessages({
             key={i}
             type="button"
             onClick={() => onSelectQuestion(q.trim())}
-            className="w-full text-left rounded-lg border px-4 py-3 text-sm hover:bg-accent transition-colors"
+            className="group flex w-full items-center justify-between border-b border-white/10 py-3 text-left text-sm text-[#EDE6DA]/80 transition-colors first:border-t hover:text-[#D9A15B]"
           >
-            {q.trim()}
+            <span>{q.trim()}</span>
+            <ArrowUpRight
+              size={14}
+              className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+            />
           </button>
         ))}
       </div>

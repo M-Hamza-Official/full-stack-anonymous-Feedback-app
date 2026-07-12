@@ -28,11 +28,19 @@ const Navbar = () => {
         Log Out
       </Button>
     </div>
-  ) : (
+  ) : (<div className='flex gap-3'>
     <Link href={'/sign-in'}>
       <Button>Sign In</Button>
     </Link>
+  
+   <Link href={'/sign-up'}>
+      <Button>Sign Up</Button>
+    </Link>
+  </div>
+    
   )}
+
+  
 </nav>
   )
 }
