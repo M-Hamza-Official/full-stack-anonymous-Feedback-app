@@ -1,71 +1,151 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
+import { Lock, Link2, LayoutDashboard, ArrowRight } from "lucide-react";
+
+const fraunces = Fraunces({ subsets: ["latin"], weight: ["400", "600"], variable: "--font-display" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
+const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["500"], variable: "--font-mono" });
+
+// The recurring "redaction bar" — stands in anywhere a name/identity would be
+function Redacted({ width = "w-24" }: { width?: string }) {
+  return (
+    <span
+      className={`inline-block h-[0.9em] ${width} bg-[#14151A] align-middle translate-y-[1px] rounded-[1px]`}
+      aria-label="anonymous"
+    />
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-          style={{
-            maxWidth: "100%",
-            height: "auto"
-          }} />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main
+      className={`${fraunces.variable} ${inter.variable} ${mono.variable} font-[family-name:var(--font-body)] bg-[#F7F5F0] text-[#1B1B1F] min-h-screen`}
+    >
+      {/* Nav */}
+      <header className="max-w-5xl mx-auto flex items-center justify-between px-6 py-6">
+        <span className="font-[family-name:var(--font-display)] text-lg tracking-tight">
+          True<span className="text-[#4A4A52]">Feedback</span>
+        </span>
+        <nav className="flex items-center gap-6 text-sm text-[#4A4A52]">
+          <Link href="/sign-in" className="hover:text-[#1B1B1F] transition-colors">
+            Sign in
+          </Link>
+          <Link
+            href="/sign-up"
+            className="bg-[#1B1B1F] text-[#F7F5F0] px-4 py-2 rounded-sm text-sm hover:bg-[#14151A] transition-colors"
+          >
+            Get your link
+          </Link>
+        </nav>
+      </header>
+
+      {/* Hero */}
+      <section className="max-w-5xl mx-auto px-6 pt-16 pb-24 grid md:grid-cols-2 gap-14 items-center">
+        <div>
+          <p className="font-[family-name:var(--font-mono)] text-xs tracking-widest uppercase text-[#4A4A52] mb-5">
+            001 — Honest feedback, no names attached
           </p>
+          <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl leading-[1.05] mb-6">
+            Say what you
+            <br />
+            really think.
+          </h1>
+          <p className="text-[#4A4A52] text-lg leading-relaxed mb-8 max-w-md">
+            Share one link. Get honest messages from friends, followers, or
+            teammates — sender always{" "}
+            <span className="relative inline-block">
+              <Redacted width="w-20" />
+            </span>
+            .
+          </p>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/sign-up"
+              className="inline-flex items-center gap-2 bg-[#1B1B1F] text-[#F7F5F0] px-5 py-3 rounded-sm hover:bg-[#14151A] transition-colors"
+            >
+              Create my link <ArrowRight size={16} />
+            </Link>
+            <span className="text-sm text-[#4A4A52]">Free, takes 30 seconds</span>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-              style={{
-                maxWidth: "100%",
-                height: "auto"
-              }} />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Mock message card — the signature moment */}
+        <div className="bg-white border border-[#DAD5C9] rounded-md p-6 shadow-[0_1px_0_#DAD5C9] rotate-1">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2 text-sm text-[#4A4A52]">
+              From <Redacted width="w-16" />
+            </div>
+            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider bg-[#FFD23F] px-2 py-1 rounded-sm">
+              New
+            </span>
+          </div>
+          <p className="text-[#1B1B1F] leading-relaxed mb-4">
+            "Honestly? Your presentation last week was the clearest one
+            we've had all quarter. More of that."
+          </p>
+          <div className="flex items-center justify-between text-xs text-[#4A4A52] border-t border-[#DAD5C9] pt-4">
+            <span>2 minutes ago</span>
+            <span className="flex items-center gap-1">
+              <Lock size={12} /> Sender not recorded
+            </span>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Features */}
+      <section className="max-w-5xl mx-auto px-6 py-20 border-t border-[#DAD5C9]">
+        <p className="font-[family-name:var(--font-mono)] text-xs tracking-widest uppercase text-[#4A4A52] mb-10">
+          002 — How it works
+        </p>
+        <div className="grid md:grid-cols-3 gap-10">
+          <Feature
+            icon={<Lock size={20} />}
+            title="Anonymous by design"
+            body="No accounts, no IP logs, no hidden identifiers tied to a message. What you send is what we keep — nothing else."
+          />
+          <Feature
+            icon={<Link2 size={20} />}
+            title="One link, anywhere"
+            body="Drop your link in a bio, a group chat, or a slide. Anyone with it can send you a message in seconds."
+          />
+          <Feature
+            icon={<LayoutDashboard size={20} />}
+            title="A calm inbox"
+            body="Messages land in a simple dashboard. Read them, archive them, or turn off new messages whenever you want."
+          />
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="max-w-5xl mx-auto px-6 py-20 border-t border-[#DAD5C9] text-center">
+        <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl mb-4">
+          Ready to hear from <Redacted width="w-24" />?
+        </h2>
+        <p className="text-[#4A4A52] mb-8">Your link is waiting. It takes less time than reading this page.</p>
+        <Link
+          href="/sign-up"
+          className="inline-flex items-center gap-2 bg-[#1B1B1F] text-[#F7F5F0] px-6 py-3 rounded-sm hover:bg-[#14151A] transition-colors"
+        >
+          Get your TrueFeedback link <ArrowRight size={16} />
+        </Link>
+      </section>
+
+      <footer className="max-w-5xl mx-auto px-6 py-8 border-t border-[#DAD5C9] flex items-center justify-between text-xs text-[#4A4A52]">
+        <span>© {new Date().getFullYear()} TrueFeedback</span>
+        <span className="font-[family-name:var(--font-mono)]">Built by <Redacted width="w-14" /></span>
+      </footer>
+    </main>
+  );
+}
+
+function Feature({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
+  return (
+    <div>
+      <div className="w-9 h-9 rounded-sm bg-[#1B1B1F] text-[#F7F5F0] flex items-center justify-center mb-4">
+        {icon}
+      </div>
+      <h3 className="font-[family-name:var(--font-display)] text-lg mb-2">{title}</h3>
+      <p className="text-sm text-[#4A4A52] leading-relaxed">{body}</p>
     </div>
   );
 }
