@@ -7,19 +7,15 @@ import {
   Row,
   Section,
   Text,
-  Button,
   Body,
   Container,
   Hr,
-  Img,
 } from '@react-email/components';
 
 interface VerificationEmailProps {
   username: string;
   verifyCode: string;
 }
-
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://yourapp.com';
 
 export default function VerificationEmail({
   username = '',
@@ -45,98 +41,57 @@ export default function VerificationEmail({
             url: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
             format: 'woff2',
           }}
-          fontWeight={700}
+          fontWeight={600}
           fontStyle="normal"
         />
       </Head>
 
-      {/* Preview text shown in email client inbox */}
-      <Preview>Your verification code is {verifyCode} — valid for 10 minutes.</Preview>
+      <Preview>Your verification code is {verifyCode}</Preview>
 
       <Body style={bodyStyle}>
         <Container style={containerStyle}>
 
-          {/* ── Header ── */}
-          <Section style={headerStyle}>
-            <Row>
-              <Heading style={logoStyle}>⚡ YourApp</Heading>
-            </Row>
+          {/* ── Wordmark ── */}
+          <Section style={{ padding: '0 8px 32px 8px' }}>
+            <Text style={logoStyle}>OpenFeedback</Text>
           </Section>
 
-          {/* ── Main card ── */}
+          {/* ── Card ── */}
           <Section style={cardStyle}>
-
             <Row>
-              <Heading as="h2" style={titleStyle}>
-                Verify your email address
+              <Heading as="h1" style={titleStyle}>
+                Verify your email
               </Heading>
             </Row>
 
             <Row>
               <Text style={bodyTextStyle}>
-                Hi <strong>{username}</strong>,
+                Hi {username}, use the code below to verify your email
+                address. This code is valid for 10 minutes.
               </Text>
             </Row>
 
-            <Row>
-              <Text style={bodyTextStyle}>
-                Thanks for signing up! Please confirm your email address by
-                entering the one-time code below. This code expires in{' '}
-                <strong>10 minutes</strong>.
-              </Text>
-            </Row>
-
-            {/* ── OTP box ── */}
             <Row>
               <Section style={otpWrapperStyle}>
-                <Text style={otpLabelStyle}>YOUR VERIFICATION CODE</Text>
                 <Text style={otpStyle}>{verifyCode}</Text>
               </Section>
             </Row>
 
-            {/* ── CTA button ── */}
             <Row>
-              <Section style={{ textAlign: 'center', marginTop: '8px' }}>
-                <Button
-                  href={`${baseUrl}/verify?otp=${verifyCode}`}
-                  style={buttonStyle}
-                >
-                  Verify My Email
-                </Button>
-              </Section>
-            </Row>
-
-            <Hr style={dividerStyle} />
-
-            {/* ── Security note ── */}
-            <Row>
-              <Text style={noteStyle}>
-                🔒 If you didn't create an account, you can safely ignore this
-                email. Someone may have typed your email address by mistake.
+              <Text style={bodyTextStyle}>
+                If you didn&apos;t request this code, you can safely ignore
+                this email.
               </Text>
             </Row>
           </Section>
 
+          <Hr style={dividerStyle} />
+
           {/* ── Footer ── */}
-          <Section style={footerStyle}>
+          <Section>
             <Row>
               <Text style={footerTextStyle}>
-                © {new Date().getFullYear()} YourApp, Inc. · All rights reserved
-              </Text>
-            </Row>
-            <Row>
-              <Text style={footerLinkStyle}>
-                <a href={`${baseUrl}/unsubscribe`} style={linkStyle}>
-                  Unsubscribe
-                </a>{' '}
-                ·{' '}
-                <a href={`${baseUrl}/privacy`} style={linkStyle}>
-                  Privacy Policy
-                </a>{' '}
-                ·{' '}
-                <a href={`${baseUrl}/terms`} style={linkStyle}>
-                  Terms of Service
-                </a>
+                © {new Date().getFullYear()} OpenFeedback
               </Text>
             </Row>
           </Section>
@@ -148,130 +103,76 @@ export default function VerificationEmail({
 }
 
 // ─────────────────────────────────────────────
-// Styles
+// Styles — minimal, single accent color, generous whitespace
+// (inspired by Stripe / Linear / Vercel transactional emails)
 // ─────────────────────────────────────────────
 
 const bodyStyle: React.CSSProperties = {
-  backgroundColor: '#f0f2f5',
-  fontFamily: 'Inter, Arial, sans-serif',
+  backgroundColor: '#ffffff',
+  fontFamily:
+    'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   margin: 0,
-  padding: '40px 0',
+  padding: '48px 16px',
 };
 
 const containerStyle: React.CSSProperties = {
-  maxWidth: '520px',
+  maxWidth: '480px',
   margin: '0 auto',
 };
 
-const headerStyle: React.CSSProperties = {
-  backgroundColor: '#0f172a',
-  borderRadius: '12px 12px 0 0',
-  padding: '20px 32px',
-};
-
 const logoStyle: React.CSSProperties = {
-  color: '#ffffff',
-  fontSize: '20px',
-  fontWeight: 700,
+  color: '#0a0a0a',
+  fontSize: '15px',
+  fontWeight: 600,
   margin: 0,
-  letterSpacing: '-0.3px',
+  letterSpacing: '-0.2px',
 };
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: '#ffffff',
-  padding: '36px 40px',
-  borderRadius: '0 0 12px 12px',
-  boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+  border: '1px solid #e5e5e5',
+  borderRadius: '8px',
+  padding: '32px',
 };
 
 const titleStyle: React.CSSProperties = {
-  color: '#0f172a',
-  fontSize: '22px',
-  fontWeight: 700,
-  margin: '0 0 20px 0',
-  lineHeight: '1.3',
+  color: '#0a0a0a',
+  fontSize: '18px',
+  fontWeight: 600,
+  margin: '0 0 12px 0',
+  lineHeight: '1.4',
 };
 
 const bodyTextStyle: React.CSSProperties = {
-  color: '#475569',
-  fontSize: '15px',
-  lineHeight: '1.65',
-  margin: '0 0 16px 0',
+  color: '#525252',
+  fontSize: '14px',
+  lineHeight: '1.6',
+  margin: '0 0 20px 0',
 };
 
 const otpWrapperStyle: React.CSSProperties = {
-  backgroundColor: '#f8fafc',
-  border: '1.5px dashed #cbd5e1',
-  borderRadius: '10px',
-  padding: '20px',
+  backgroundColor: '#fafafa',
+  borderRadius: '6px',
+  padding: '16px',
   textAlign: 'center',
-  margin: '8px 0 24px 0',
-};
-
-const otpLabelStyle: React.CSSProperties = {
-  color: '#94a3b8',
-  fontSize: '11px',
-  fontWeight: 700,
-  letterSpacing: '1.2px',
-  margin: '0 0 8px 0',
-  textTransform: 'uppercase',
+  margin: '4px 0 20px 0',
 };
 
 const otpStyle: React.CSSProperties = {
-  color: '#0f172a',
-  fontSize: '40px',
-  fontWeight: 700,
-  letterSpacing: '10px',
-  margin: 0,
-  fontVariantNumeric: 'tabular-nums',
-};
-
-const buttonStyle: React.CSSProperties = {
-  backgroundColor: '#6366f1',
-  borderRadius: '8px',
-  color: '#ffffff',
-  display: 'inline-block',
-  fontSize: '15px',
+  color: '#0a0a0a',
+  fontSize: '28px',
   fontWeight: 600,
-  padding: '13px 32px',
-  textDecoration: 'none',
-  letterSpacing: '0.2px',
+  letterSpacing: '6px',
+  margin: 0,
+  fontFamily: '"SF Mono", "Courier New", monospace',
 };
 
 const dividerStyle: React.CSSProperties = {
-  borderColor: '#e2e8f0',
-  margin: '28px 0',
-};
-
-const noteStyle: React.CSSProperties = {
-  backgroundColor: '#fffbeb',
-  border: '1px solid #fde68a',
-  borderRadius: '8px',
-  color: '#78350f',
-  fontSize: '13px',
-  lineHeight: '1.6',
-  margin: 0,
-  padding: '12px 16px',
-};
-
-const footerStyle: React.CSSProperties = {
-  padding: '24px 0 0 0',
-  textAlign: 'center',
+  borderColor: '#e5e5e5',
+  margin: '32px 0 24px 0',
 };
 
 const footerTextStyle: React.CSSProperties = {
-  color: '#94a3b8',
-  fontSize: '12px',
-  margin: '0 0 6px 0',
-};
-
-const footerLinkStyle: React.CSSProperties = {
-  color: '#94a3b8',
+  color: '#a3a3a3',
   fontSize: '12px',
   margin: 0,
-};
-
-const linkStyle: React.CSSProperties = {
-  color: '#6366f1',
-  textDecoration: 'none',
 };
