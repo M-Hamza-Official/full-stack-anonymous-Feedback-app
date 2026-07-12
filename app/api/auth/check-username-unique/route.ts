@@ -4,19 +4,19 @@ import dbconnect from "@/lib/dbConnect";
 import userModel from "@/models/user";
 
 const userNameQuerySchema = z.object({
-    username: userNameValidation
+    userName: userNameValidation
 })
 export async function GET(request: Request) {
     await dbconnect()
     try {
     const { searchParams } = new URL(request.url)
     const queryparam = {
-        username: searchParams.get("userName")
+        userName: searchParams.get("username")
     }
     const result = userNameQuerySchema.safeParse(queryparam)
     console.log(result);//todo:remove
     if (!result.success) {
-        const resultErrors = result.error?.format().username?._errors || [];
+        const resultErrors = result.error?.format().userName?._errors || [];
         return Response.json({
             success: false,
             message: resultErrors?.length > 0 ? resultErrors?.join(',') : "invalid query parameter"
@@ -25,9 +25,9 @@ export async function GET(request: Request) {
             status: 400
         })
     }
-    const {username}=result.data
+    const {userName}=result.data
    const existingUsernameuser= await userModel.findOne({
-        userName:username,isVerified:true
+        userName,isVerified:true
     })
     if(existingUsernameuser){
          return Response.json({

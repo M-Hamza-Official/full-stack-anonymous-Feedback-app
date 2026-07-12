@@ -11,7 +11,7 @@ export async function sendVerificationEmail(
         await resend.emails.send({
             from: 'OpenFeedback <verify@openfeedback.muhammadhamza.me>',
             to: email,
-            subject: 'Hello world',
+            subject: 'Code verification',
             react: VerificationEmail({ username, verifyCode: verifycode }),
         });
         return { success: true, message: "Verification email send successfully! " }
