@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { X, MessageSquare } from "lucide-react"
+import { X, Lock } from "lucide-react"
 import { Message } from "@/models/user"
 import axios, { AxiosError } from "axios"
 import { apiResponse } from "@/types/apiResponse"
@@ -37,10 +37,15 @@ const formatRelativeTime = (date: string | Date) => {
   return past.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
+const isRecent = (date: string | Date) => {
+  const diffMs = new Date().getTime() - new Date(date).getTime()
+  return diffMs < 1000 * 60 * 60 * 24 // "new" if under 24h old
+}
+
 export default function MessageCard({ message, onMessageDelete }: MessageCardProps) {
   const onSubmitHandler = async () => {
     try {
-      const response = await axios.delete<apiResponse>(`/api/delete-message/${message._id}`)
+      await axios.delete<apiResponse>(`/api/delete-message/${message._id}`)
       toast.success("Message deleted")
       onMessageDelete(String(message._id))
     } catch (error) {
@@ -51,52 +56,63 @@ export default function MessageCard({ message, onMessageDelete }: MessageCardPro
   }
 
   return (
-    <div className="group relative flex items-start gap-4 py-6 px-1 border-b border-gray-100 last:border-b-0 transition-colors hover:bg-gray-50/60 rounded-lg">
-      {/* Icon bubble */}
-      <div className="shrink-0 flex items-center justify-center h-9 w-9 rounded-full bg-indigo-50 text-indigo-500">
-        <MessageSquare className="h-4 w-4" />
+    <div className="group relative rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow p-5 sm:p-6">
+      {/* Top row: badge + delete */}
+      <div className="flex items-start justify-between mb-4">
+        {isRecent(message.createdAt) ? (
+          <span className="bg-yellow-400 text-black text-xs font-bold tracking-wide px-2.5 py-1 rounded-md">
+            NEW
+          </span>
+        ) : (
+          <span />
+        )}
+
+        <AlertDialog>
+          <AlertDialogTrigger
+            render={
+              <button
+                className="sm:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-150 p-1.5 rounded-full hover:bg-red-50 text-gray-300 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-200"
+                aria-label ="Delete message"
+              />
+            }
+          >
+            <X className="h-4  w-4" />
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete this message?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This message will be permanently removed from your inbox.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={onSubmitHandler}
+                className="bg-red-500 hover:bg-red-600 text-white"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 min-w-0 pr-8">
-        <p className="text-gray-800 leading-relaxed break-words">
-          {message.content}
-        </p>
-        <p className="text-xs text-gray-400 mt-2 font-medium tracking-wide">
-          {formatRelativeTime(message.createdAt)}
-        </p>
-      </div>
+      {/* Message content */}
+      <p className="text-lg sm:text-xl text-gray-900 leading-snug">
+        &ldquo;{message.content}&rdquo;
+      </p>
 
-      {/* Delete trigger */}
-      <AlertDialog>
-        <AlertDialogTrigger
-          render={
-            <button
-              className="absolute top-5 right-1 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-150 shrink-0 p-2 rounded-full hover:bg-red-50 text-gray-400 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-200"
-              aria-label="Delete message"
-            />
-          }
-        >
-          <X className="h-4 w-4" />
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete this message?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This message will be permanently removed from your inbox.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={onSubmitHandler}
-              className="bg-red-500 hover:bg-red-600 text-white"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <div className="h-px bg-gray-100 my-5" />
+
+      {/* Footer row */}
+      <div className="flex items-center justify-between text-sm text-gray-500">
+        <span>{formatRelativeTime(message.createdAt)}</span>
+        <span className="flex items-center gap-1.5">
+          <Lock className="h-3.5 w-3.5" />
+          Sender not recorded
+        </span>
+      </div>
     </div>
   )
 }

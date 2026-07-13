@@ -102,8 +102,8 @@ const Page = () => {
 
   if (!session || !session.user) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-gray-500 text-xl">Please sign in to view your dashboard.</p>
+      <div className="flex items-center justify-center min-h-[60vh] px-4">
+        <p className="text-gray-500 text-lg sm:text-xl text-center">Please sign in to view your dashboard.</p>
       </div>
     )
   }
@@ -112,20 +112,20 @@ const Page = () => {
     <div className="min-h-screen bg-white">
       <div className="p-4 sm:p-10 max-w-3xl mx-auto">
         {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+        <div className="mb-6 sm:mb-10">
+          <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900">
             Dashboard
           </h1>
-          <p className="text-gray-500 mt-2 text-lg">
+          <p className="text-gray-500 mt-2 text-base sm:text-lg">
             Manage your anonymous messages and profile link
           </p>
         </div>
 
         {/* Profile link + toggle card */}
-        <div className="mb-8 rounded-2xl border border-gray-100 bg-gray-50/60 p-7">
+        <div className="mb-6 sm:mb-8 rounded-2xl border border-gray-100 bg-gray-50/60 p-4 sm:p-7">
           <div className="flex items-center gap-2 mb-4">
-            <Link2 className="h-5 w-5 text-indigo-500" />
-            <label className="text-base font-semibold text-gray-800">
+            <Link2 className="h-5 w-5 text-indigo-500 shrink-0" />
+            <label className="text-sm sm:text-base font-semibold text-gray-800">
               Your Unique Link
             </label>
           </div>
@@ -134,24 +134,24 @@ const Page = () => {
               type="text"
               value={profileUrl}
               disabled
-              className="border border-gray-200 rounded-lg px-4 py-3 w-full bg-white text-gray-700 text-base focus:outline-none"
+              className="border border-gray-200 rounded-lg px-4 py-3 w-full bg-white text-gray-700 text-sm sm:text-base focus:outline-none"
             />
             <Button
               onClick={copyToClipboard}
               size="lg"
-              className="shrink-0 gap-2 rounded-lg text-base"
+              className="shrink-0 gap-2 rounded-lg text-base w-full sm:w-auto"
             >
               <Copy className="h-4 w-4" />
               Copy
             </Button>
           </div>
 
-          <div className="h-px bg-gray-200 my-7" />
+          <div className="h-px bg-gray-200 my-5 sm:my-7" />
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="font-semibold text-gray-900 text-lg">Accept Messages</p>
-              <p className="text-base text-gray-500 mt-1">
+              <p className="font-semibold text-gray-900 text-base sm:text-lg">Accept Messages</p>
+              <p className="text-sm sm:text-base text-gray-500 mt-1">
                 {acceptMessage
                   ? "You're currently accepting new messages"
                   : "You're not accepting new messages"}
@@ -162,17 +162,18 @@ const Page = () => {
               checked={acceptMessage}
               onCheckedChange={toggleSwitch}
               disabled={isSwitchLoading}
+              className="shrink-0"
             />
           </div>
         </div>
 
         {/* Messages section */}
-        <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-7">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-2xl font-semibold text-gray-900">
+        <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4 sm:p-7">
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <h2 className="text-lg sm:text-2xl font-semibold text-gray-900">
               Messages{' '}
               {messages.length > 0 && (
-                <span className="text-gray-400 font-normal text-lg">
+                <span className="text-gray-400 font-normal text-base sm:text-lg">
                   ({messages.length})
                 </span>
               )}
@@ -180,7 +181,7 @@ const Page = () => {
             <Button
               variant="ghost"
               size="lg"
-              className="gap-2 text-gray-500 text-base"
+              className="gap-2 text-gray-500 text-sm sm:text-base shrink-0"
               disabled={isLoading}
               onClick={(e) => {
                 e.preventDefault()
@@ -192,22 +193,22 @@ const Page = () => {
               ) : (
                 <RefreshCw className="h-5 w-5" />
               )}
-              Refresh
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
           </div>
 
           {isLoading ? (
-            <div className="flex items-center justify-center py-16 text-gray-400 text-lg">
+            <div className="flex items-center justify-center py-16 text-gray-400 text-base sm:text-lg">
               <Loader2 className="h-7 w-7 animate-spin mr-3" />
               Loading messages...
             </div>
           ) : messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-16 text-gray-400 px-4 text-center">
               <Inbox className="h-12 w-12 mb-4" />
-              <p className="text-lg">No messages yet. Share your link to get feedback!</p>
+              <p className="text-base sm:text-lg">No messages yet. Share your link to get feedback!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 items-start sm:grid-cols-2 gap-x-4">
               {messages.map((message) => (
                 <MessageCard
                   key={String(message._id)}

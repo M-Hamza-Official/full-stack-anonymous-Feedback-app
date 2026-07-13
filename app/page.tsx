@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
 import { Lock, Link2, LayoutDashboard, ArrowRight } from "lucide-react";
+import type { Metadata } from 'next'
 
+export const metadata: Metadata = {
+  viewport: 'width=device-width, initial-scale=1.0',
+}
 const fraunces = Fraunces({ subsets: ["latin"], weight: ["400", "600"], variable: "--font-display" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
 const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["500"], variable: "--font-mono" });
@@ -24,7 +28,7 @@ export default function Home() {
       {/* Nav */}
       <header className="max-w-5xl mx-auto flex items-center justify-between px-6 py-6">
         <span className="font-[family-name:var(--font-display)] text-lg tracking-tight">
-          True<span className="text-[#4A4A52]">Feedback</span>
+          open<span className="text-[#4A4A52]">Feedback</span>
         </span>
         <nav className="flex items-center gap-6 text-sm text-[#4A4A52]">
           <Link href="/sign-in" className="hover:text-[#1B1B1F] transition-colors">
@@ -126,12 +130,12 @@ export default function Home() {
           href="/sign-up"
           className="inline-flex items-center gap-2 bg-[#1B1B1F] text-[#F7F5F0] px-6 py-3 rounded-sm hover:bg-[#14151A] transition-colors"
         >
-          Get your TrueFeedback link <ArrowRight size={16} />
+          Get your openFeedback link <ArrowRight size={16} />
         </Link>
       </section>
 
       <footer className="max-w-5xl mx-auto px-6 py-8 border-t border-[#DAD5C9] flex items-center justify-between text-xs text-[#4A4A52]">
-        <span>© {new Date().getFullYear()} TrueFeedback</span>
+        <span>© {new Date().getFullYear()} openFeedback</span>
         <span className="font-[family-name:var(--font-mono)]">Built by <Redacted width="w-14" /></span>
       </footer>
     </main>
