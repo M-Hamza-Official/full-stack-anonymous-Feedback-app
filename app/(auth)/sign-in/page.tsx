@@ -138,6 +138,14 @@ const page = () => {
     Sign Up
   </Link>
 </div>
+<div className="text-center text-sm text-red-500">
+                <Link
+                  href="/forgot-password"
+                  className="font-medium  hover:underline"
+                >
+                    Forgot Password
+                </Link>
+              </div>
             </form>
           </FormProvider>
         </div>
