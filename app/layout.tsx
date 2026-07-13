@@ -4,6 +4,7 @@ import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
 import { Toaster } from "@/components/ui/sonner"
 import Navbar from "@/components/Navbar";
+import { Analytics } from "@vercel/analytics/next";
 
 
 const geistSans = Geist({
@@ -36,6 +37,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <Navbar/>{children}
         <Toaster/>
+        <Analytics />
       </body>
       </AuthProvider>
     </html>
