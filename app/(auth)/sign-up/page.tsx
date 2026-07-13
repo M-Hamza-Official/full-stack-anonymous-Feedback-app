@@ -69,8 +69,8 @@ const page = () => {
       // setIsSubmitting(false)
     } catch (error) {
       console.log("Error signning up user", error);
-      const Error = error as AxiosError<apiResponse>
-      const SignUPError = Error.response?.data.message
+      const sError = error as AxiosError<apiResponse>
+      const SignUPError = sError.response?.data.message
       toast.error("User failed to Sign Up", {
         description: SignUPError,
 

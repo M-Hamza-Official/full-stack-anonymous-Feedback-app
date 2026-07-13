@@ -12,7 +12,15 @@ import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 import { MailCheck } from "lucide-react"
+import { useEffect, useState } from "react"
+import CircularTimer from "@/components/CircularTimer"
+import { useDebounceCallback } from "usehooks-ts"
+const RESEND_COOLDOWN_SECONDS = 60
+
 const Page = () => {
+    const [isResending, setIsResending] = useState(false)
+    const [cooldown, setCooldown] = useState(0)
+    const debounced = useDebounceCallback(setCooldown, 6000)
     const params = useParams<{ username: string }>()
     const router = useRouter()
     const form = useForm<z.infer<typeof verifySchema>>({
@@ -20,8 +28,38 @@ const Page = () => {
         defaultValues: {
             code: ""
         }
-
     })
+
+    useEffect(() => {
+        if (cooldown <= 0) return
+
+        const interval = setInterval(() => {
+            setCooldown((prev) => prev - 1)
+        }, 1000)
+
+        return () => clearInterval(interval)
+    }, [cooldown])
+
+    const resendCodeHandler = async () => {
+        setIsResending(true)
+        try {
+            await axios.post<apiResponse>('/api/resend-code', {
+                username: params.username
+            })
+            toast.info("A new code has been requested.")
+            setCooldown(RESEND_COOLDOWN_SECONDS)
+        } catch (error) {
+            console.log("Error resending code", error)
+            const Error = error as AxiosError<apiResponse>
+            const resendError = Error.response?.data.message
+            toast.error("Failed to resend code", {
+                description: resendError,
+            })
+        } finally {
+            setIsResending(false)
+        }
+    }
+
     const onSubmit = async (data: z.infer<typeof verifySchema>) => {
         try {
             await axios.post('/api/verify-code', {
@@ -30,7 +68,6 @@ const Page = () => {
             })
             toast.success("success", {
                 description: "User code verified!",
-
             })
             router.replace('/sign-in')
         } catch (error) {
@@ -39,7 +76,6 @@ const Page = () => {
             const SignUPError = Error.response?.data.message
             toast.error("Incorrect Code", {
                 description: SignUPError,
-
             })
         }
     }
@@ -80,13 +116,13 @@ const Page = () => {
                                     value={field.value}
                                     onChange={field.onChange}
                                 >
-                                    <InputOTPGroup>
-                                        <InputOTPSlot index={0} />
-                                        <InputOTPSlot index={1} />
-                                        <InputOTPSlot index={2} />
-                                        <InputOTPSlot index={3} />
-                                        <InputOTPSlot index={4} />
-                                        <InputOTPSlot index={5} />
+                                    <InputOTPGroup className="w-full flex justify-center">
+                                        <InputOTPSlot className={'h-[54px] w-full'} index={0} />
+                                        <InputOTPSlot className={'h-[54px] w-full'} index={1} />
+                                        <InputOTPSlot className={'h-[54px] w-full'} index={2} />
+                                        <InputOTPSlot className={'h-[54px] w-full'} index={3} />
+                                        <InputOTPSlot className={'h-[54px] w-full'} index={4} />
+                                        <InputOTPSlot className={'h-[54px] w-full'} index={5} />
                                     </InputOTPGroup>
                                 </InputOTP>
                             )}
@@ -101,19 +137,30 @@ const Page = () => {
 
                     <Button
                         type="submit"
-                        className="w-full"
+                        className="p-4"
                         disabled={form.formState.isSubmitting}
+                    
                     >
                         {form.formState.isSubmitting ? "Verifying..." : "Verify"}
                     </Button>
 
-                    <button
-                        type="button"
-                        onClick={() => toast.info("A new code has been requested.")}
-                        className="text-sm text-slate-500 underline-offset-4 hover:underline"
-                    >
-                        Resend code
-                    </button>
+                    {cooldown > 0 ? (
+                        <div className="flex items-center gap-2">
+                            <CircularTimer seconds={cooldown} totalSeconds={RESEND_COOLDOWN_SECONDS} />
+                            <span className="text-sm text-slate-500">
+                                Wait before resending
+                            </span>
+                        </div>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => resendCodeHandler()}
+                            disabled={isResending}
+                            className="text-sm text-slate-500 underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            {isResending ? "Sending..." : "Resend code"}
+                        </button>
+                    )}
                 </form>
             </div>
         </div>

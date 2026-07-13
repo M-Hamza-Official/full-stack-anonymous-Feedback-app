@@ -27,7 +27,7 @@ export async function GET(request: Request) {
     }
     const {userName}=result.data
    const existingUsernameuser= await userModel.findOne({
-        userName,isVerified:true
+        userName,isVerified:true 
     })
     if(existingUsernameuser){
          return Response.json({

@@ -23,7 +23,15 @@ export async function POST(request: Request) {
             });
 
         }
-        const verifiedUserByEmail = await userModel.findOne({ email })
+        const unverifiedUserByUsername = await userModel.findOne({
+            userName,
+            isVerified: false
+        })
+
+        if (unverifiedUserByUsername && unverifiedUserByUsername.email !== email) {
+            await userModel.deleteOne({ _id: unverifiedUserByUsername._id })
+        }
+        const verifiedUserByEmail = await userModel.findOne({ email, })
         if (verifiedUserByEmail) {
 
             if (verifiedUserByEmail.isVerified) {
@@ -35,13 +43,19 @@ export async function POST(request: Request) {
                 })
             } else {
                 const hashedPassword = await bcrypt.hash(password, 10);
-                    verifiedUserByEmail.userName = userName          // <-- this line fix the verify code bug
+                verifiedUserByEmail.userName = userName          // <-- this line fix the verify code bug
 
                 verifiedUserByEmail.password = hashedPassword
                 verifiedUserByEmail.verifyCode = verifyCode
                 verifiedUserByEmail.checkCodeExpiry = new Date(Date.now() + 360000)
                 await verifiedUserByEmail.save()
             }
+            return Response.json({
+                success: true,
+                message: "username "
+            }, {
+                status: 400
+            })
 
 
         } else {
