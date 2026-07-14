@@ -26,22 +26,7 @@ export default function Home() {
       className={`${fraunces.variable} ${inter.variable} ${mono.variable} font-[family-name:var(--font-body)] bg-[#F7F5F0] text-[#1B1B1F] min-h-screen`}
     >
       {/* Nav */}
-      <header className="max-w-5xl mx-auto flex items-center justify-between px-6 py-6">
-        <span className="font-[family-name:var(--font-display)] text-lg tracking-tight">
-          open<span className="text-[#4A4A52]">Feedback</span>
-        </span>
-        <nav className="flex items-center gap-6 text-sm text-[#4A4A52]">
-          <Link href="/sign-in" className="hover:text-[#1B1B1F] transition-colors">
-            Sign in
-          </Link>
-          <Link
-            href="/sign-up"
-            className="bg-[#1B1B1F] text-[#F7F5F0] px-4 py-2 rounded-sm text-sm hover:bg-[#14151A] transition-colors"
-          >
-            Get your link
-          </Link>
-        </nav>
-      </header>
+   
 
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-6 pt-16 pb-24 grid md:grid-cols-2 gap-14 items-center">
@@ -136,7 +121,7 @@ export default function Home() {
 
       <footer className="max-w-5xl mx-auto px-6 py-8 border-t border-[#DAD5C9] flex items-center justify-between text-xs text-[#4A4A52]">
         <span>© {new Date().getFullYear()} openFeedback</span>
-        <span className="font-[family-name:var(--font-mono)]">Built by <Redacted width="w-14" /></span>
+        <span className="font-[family-name:var(--font-mono)]">Built by Hamza</span>
       </footer>
     </main>
   );
