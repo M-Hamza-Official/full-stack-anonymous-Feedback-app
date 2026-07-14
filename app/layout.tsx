@@ -4,11 +4,8 @@ import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
 import { Toaster } from "@/components/ui/sonner"
 import Navbar from "@/components/Navbar";
-
 import { Analytics } from "@vercel/analytics/next";
-
 import { SpeedInsights } from "@vercel/speed-insights/next";
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,7 +16,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
 
 export const metadata: Metadata = {
   title: "OpenFeedback | Anonymous Feedback, Honestly Shared",
@@ -62,19 +58,13 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <AuthProvider>
-
-
         <body className="min-h-full flex flex-col">
-          <Navbar />{children}
+          <Navbar />
+          {children}
           <Toaster />
           <Analytics />
+          <SpeedInsights />
         </body>
-
-      <body className="min-h-full flex flex-col">
-        <Navbar/>{children}
-        <Toaster/>
-        <SpeedInsights/>
-      </body>
       </AuthProvider>
     </html>
   );
