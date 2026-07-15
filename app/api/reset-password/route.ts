@@ -38,7 +38,7 @@ export async function POST(request: Request) {
         existingUserWithEmail.password = hashedPassword
 
         // Clear the code so it can't be reused
-        existingUserWithEmail.checkCodeExpiry = new Date(0) // far in the past, so it's always "expired" if somehow reused
+        existingUserWithEmail.checkCodeExpiry = new Date(0) 
 
         await existingUserWithEmail.save()
 

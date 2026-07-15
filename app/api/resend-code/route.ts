@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
         const resendCode = await sendVerificationEmail(existingUser.email, existingUser.userName, verifyCode)
         existingUser.verifyCode = verifyCode
-        existingUser.checkCodeExpiry = new Date(Date.now() + 3600000) // or however you calculate expiry elsewhere
+        existingUser.checkCodeExpiry = new Date(Date.now() + 3600000) 
         await existingUser.save()
         if (resendCode) {
             return Response.json(

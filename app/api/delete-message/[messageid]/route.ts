@@ -8,7 +8,6 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ m
 ) {
     const {messageid }= await params
     await dbconnect();
-// console.log(messageId);
 
     const session = await getServerSession(authOptions);
     const user: User = session?.user as User;

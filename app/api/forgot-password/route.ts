@@ -18,7 +18,6 @@ export async function POST(request: Request) {
         const verifyCode = Math.floor(100000 + Math.random() * 900000).toString()
         const resendCode = await sendVerificationEmail(existingUserWithEmail.email, existingUserWithEmail.userName, verifyCode)
 
-        // Only save the code to the DB if the email actually sent successfully
         if (resendCode) {
             existingUserWithEmail.verifyCode = verifyCode
             existingUserWithEmail.checkCodeExpiry = new Date(Date.now() + 3600000)
